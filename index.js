@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 const userhandler  = require("./routeHandler/userHandler")
 const eventHandler  = require("./routeHandler/eventHandler")
+const bookingHandler  = require("./routeHandler/bookingHandler")
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -29,7 +30,7 @@ app.use(errorHandler)
 //application routes
 app.use("/user",userhandler);
 app.use("/event",eventHandler);
-
+app.use("/booking", bookingHandler);
 
 
 app.get('/', (req, res) => {

@@ -23,9 +23,18 @@ router.post('/signup', async (req, res) => {
         // Save the user to the database
         await newUser.save();
 
-        // Respond with a success message
+        // Generate a JWT token
+        const token = jwt.sign({
+            name: newUser.name,
+            id: newUser._id
+        }, process.env.JWT_SECRET, {
+            expiresIn: '7d',
+        });
+
+        // Respond with a success message and the token
         res.status(200).json({
-            message: "User was inserted successfully"
+            message: "User was inserted successfully",
+            token: token
         });
     } catch (err) {
         // Log the error and respond with an error message
