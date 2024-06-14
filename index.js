@@ -9,7 +9,7 @@ import bookingHandler from "./routeHandler/bookingHandler";
 import SSLCommerzPayment from 'sslcommerz-lts';
 
 
-// CORS configuration
+
 
   
 
