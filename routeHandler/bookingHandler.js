@@ -12,8 +12,9 @@ const Event = mongoose.model("Event", eventSchema);
 router.post('/', verifyLogin, async (req, res) => {
     try {
         const { eventId, numberOfTickets } = req.body;
+        console.log(req.user)
         const userId = req.user._id;
-
+     
         const event = await Event.findById(eventId);
         if (!event) {
             return res.status(404).json({ message: "Event not found" });
@@ -86,6 +87,29 @@ router.get('/user/:userId', verifyLogin, async (req, res) => {
         res.status(200).json({
             message: "Bookings retrieved successfully",
             result: bookings
+        });
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).json({
+            error: "There was an error",
+            details: err.message
+        });
+    }
+});
+// DELETE: Delete a booking by ID
+router.delete('/:bookingId', verifyLogin, async (req, res) => {
+    try {
+        const bookingId = req.params.bookingId;
+        const booking = await Booking.findById(bookingId);
+
+        if (!booking) {
+            return res.status(404).json({ message: "Booking not found" });
+        }
+
+        await Booking.findByIdAndDelete(bookingId);
+
+        res.status(200).json({
+            message: "Booking deleted successfully"
         });
     } catch (err) {
         console.error('Error:', err);

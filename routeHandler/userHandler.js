@@ -7,16 +7,28 @@ const jwt = require("jsonwebtoken");
 const userSchema = require("../Schemas/userSchema");
 const User = mongoose.model("User", userSchema);
 
+
 // POST: Create a new user
 router.post('/signup', async (req, res) => {
+    const { name, email, password } = req.body;
+    
+    // Log the incoming request body
+    console.log('Received signup request:');
+
+    // Validate input
+    if (!name || !email || !password) {
+        console.log('Validation failed: Missing fields');
+        return res.status(400).json({ message: 'Name, email, and password are required' });
+    }
+
     try {
         // Hash the password with a salt rounds value of 10
-        const hashedPass = await bcrypt.hash(req.body.password, 10);
+        const hashedPass = await bcrypt.hash(password, 10);
 
         // Create a new user instance
         const newUser = new User({
-            name: req.body.name,
-            email: req.body.email,
+            name: name,
+            email: email,
             password: hashedPass
         });
 
@@ -24,23 +36,22 @@ router.post('/signup', async (req, res) => {
         await newUser.save();
 
         // Generate a JWT token
-        const token = jwt.sign({
-            name: newUser.name,
-            id: newUser._id
-        }, process.env.JWT_SECRET, {
-            expiresIn: '7d',
-        });
+        const token = jwt.sign(
+            { name: newUser.name, id: newUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
 
-        // Respond with a success message and the token
+        // Respond with the token and success message
         res.status(200).json({
-            message: "User was inserted successfully",
+            message: 'User was inserted successfully',
             token: token
         });
     } catch (err) {
         // Log the error and respond with an error message
         console.error(err);
         res.status(500).json({
-            error: "There was an error",
+            error: 'There was an error',
             details: err.message
         });
     }
@@ -72,6 +83,7 @@ router.post('/login', async (req, res) => {
         // Respond with the token
         res.status(200).json({
             token: token,
+            _id:user._id,
             message: "Login successful"
         });
     } catch (err) {

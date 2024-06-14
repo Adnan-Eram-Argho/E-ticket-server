@@ -22,7 +22,7 @@ router.post('/all', async (req, res) => {
 
 
 //get all events
-  router.get('/',verifyLogin, async (req, res) => {
+  router.get('/', async (req, res) => {
     try {
         const data = await Event.find();
         res.status(200).json({
