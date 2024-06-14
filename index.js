@@ -10,14 +10,11 @@ const SSLCommerzPayment = require('sslcommerz-lts');
 const verifyLogin = require("./middlewares/verifyLogin");
 
 // CORS configuration
-const corsOptions = {
-    origin: 'http://localhost:5173',
-    optionsSuccessStatus: 200 // Some legacy browsers choke on 204
-  };
+
   
 
 const app = express();
-app.use(cors(corsOptions));  // Apply CORS middleware to all routes
+app.use(cors());  // Apply CORS middleware to all routes
 app.use(bodyParser.json());
 app.use(express.json());
 
