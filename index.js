@@ -1,13 +1,13 @@
 require('dotenv').config();
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const userHandler = require("./routeHandler/userHandler");
-const eventHandler = require("./routeHandler/eventHandler");
-const bookingHandler = require("./routeHandler/bookingHandler");
-const SSLCommerzPayment = require('sslcommerz-lts');
-const verifyLogin = require("./middlewares/verifyLogin");
+import express, { json } from "express";
+import { connect } from "mongoose";
+import { json as _json } from 'body-parser';
+import cors from 'cors';
+import userHandler from "./routeHandler/userHandler";
+import eventHandler from "./routeHandler/eventHandler";
+import bookingHandler from "./routeHandler/bookingHandler";
+import SSLCommerzPayment from 'sslcommerz-lts';
+
 
 // CORS configuration
 
@@ -15,8 +15,8 @@ const verifyLogin = require("./middlewares/verifyLogin");
 
 const app = express();
 app.use(cors());  // Apply CORS middleware to all routes
-app.use(bodyParser.json());
-app.use(express.json());
+app.use(_json());
+app.use(json());
 
 const port = 5000;
 const uri = process.env.MONGO_URI;
@@ -27,7 +27,7 @@ const store_passwd = process.env.STORE_PASSWORD;
 const is_live = false; // true for live, false for sandbox
 
 // Database connection with mongoose
-mongoose.connect(uri)
+connect(uri)
     .then(() => console.log("Connection successful"))
     .catch(err => console.log(err));
 
